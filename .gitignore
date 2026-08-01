@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore all downloaded music files & audio content inside music directory
+server/music/*
+!server/music/.gitkeep
+
+# Ignore audio extensions globally just in case
+*.mp3
+*.m4a
+*.flac
+*.ogg
+*.wav
+*.webm
+
+# Operating system files
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment variables
+.env
+.env.local

@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "مُنزّل يوتيوب ميوزك عالي الجودة (320kbps) - alshrief",
+  "version": "1.0.0",
+  "description": "إضافة كروم لتحميل أغاني يوتيوب ويوتيوب ميوزك بأعلى جودة صوت 320kbps وحفظها محلياً - تطوير alshrief (ahmed.r.elshrief@gmail.com)",
+  "author": "alshrief <ahmed.r.elshrief@gmail.com>",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "مُنزّل يوتيوب ميوزك - alshrief"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://music.youtube.com/*",
+    "http://localhost:4000/*",
+    "http://localhost:3000/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/*",
+        "*://music.youtube.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
