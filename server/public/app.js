@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // عناصر الشاشات والقوائم
   const totalTracksCount = document.getElementById('totalTracksCount');
   const favCountBadge = document.getElementById('favCountBadge');
+  const langSelector = document.getElementById('langSelector');
 
   // 2️⃣ حالة المشغل والتنقل (Player & Router State)
   let tracks = [];
@@ -51,6 +52,27 @@ document.addEventListener('DOMContentLoaded', () => {
   let repeatState = 0;
   let lastVolume = 0.8;
   let favorites = JSON.parse(localStorage.getItem('yt_music_favs') || '[]');
+
+  // 🌐 تهيئة نظام اللغة (i18n Bootstrap)
+  const savedLang = window.getCurrentLang();
+  window.applyLanguage(savedLang);
+
+  langSelector.addEventListener('change', (e) => {
+    window.applyLanguage(e.target.value);
+    // تحديث النصوص الديناميكية في المشغل
+    if (currentTrackIndex === -1) {
+      playerTitle.textContent = window.t('playerDefaultTitle');
+      playerArtist.textContent = window.t('playerDefaultArtist');
+    }
+    // إعادة رسم الشاشة الحالية لتحديث النصوص
+    const activeView = document.querySelector('.page-view.active-view');
+    if (activeView) {
+      const viewId = activeView.id.replace('view-', '');
+      if (viewId === 'library') renderLibraryView();
+      if (viewId === 'downloads') renderDownloadsView();
+      if (viewId === 'favorites') renderFavoritesView();
+    }
+  });
 
   // Web Audio Equalizer Engine
   let audioCtx = null;
@@ -199,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tbody.innerHTML = '';
 
     if (tracks.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#aaa;">لا توجد أغاني محملة بالمكتبة بعد.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#aaa;">${window.t('libEmpty')}</td></tr>`;
       return;
     }
 
@@ -211,11 +233,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${i + 1}</td>
         <td style="font-weight:700; color:#fff;">${track.title}</td>
         <td style="color:#aaa;">${track.artist}</td>
-        <td style="color:#aaa;">${track.album || 'مكتبتي المحلية'}</td>
+        <td style="color:#aaa;">${track.album || window.t('libDefaultAlbum')}</td>
         <td style="color:#aaa;">${sizeMB} MB</td>
         <td><span class="quality-badge">320kbps</span></td>
         <td>
-          <button class="icon-btn" style="color:#ff0000;" title="تشغيل">▶</button>
+          <button class="icon-btn" style="color:#ff0000;" title="${window.t('libColPlay')}">▶</button>
         </td>
       `;
 
@@ -232,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSize = tracks.reduce((acc, t) => acc + (t.size || 0), 0);
     const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(1);
 
-    statsEl.innerText = `${tracks.length} أغنية محملة • إجمالي ${totalSizeMB} MB في المجلد المحلي`;
+    statsEl.innerText = `${tracks.length} ${window.t('statLabel')} • ${totalSizeMB} MB`;
 
     renderGrid(downloadsGrid, tracks);
   }
@@ -256,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statsEl = document.getElementById('favoritesPlaylistStats');
 
     const favTracks = tracks.filter(t => favorites.includes(t.id));
-    statsEl.innerText = `${favTracks.length} أغنية مفضلة في قائمة التشغيل الشخصية`;
+    statsEl.innerText = `${favTracks.length} ${window.t('playlistFavorites')}`;
 
     renderGrid(favGrid, favTracks);
   }
@@ -275,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (trackList.length === 0) {
       container.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; color: #aaa; padding: 40px;">
-          🎵 لا توجد أغاني مطابقة للشرط حالياً.
+          ${window.t('emptyGrid')}
         </div>
       `;
       return;
