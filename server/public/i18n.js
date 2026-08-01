@@ -420,7 +420,7 @@ window.t = function (key) {
 
 
 // =============================================================================
-// LANGUAGE TEMPLATE — copy this block to add a new language
+// LANGUAGE TEMPLATE — copy this block to add a new language - all love for you.
 // =============================================================================
 //
 // window.I18N['xx'] = {         // replace 'xx' with ISO 639-1 code (e.g. 'es')
